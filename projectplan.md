@@ -77,13 +77,13 @@ A responsive web app for organizing an annual family beach vacation at Carolina 
 - [x] Push to git
 
 ### Phase 5: Admin Features
-- [ ] Add/edit beach week (creates year entry in sidebar)
-- [ ] Edit room assignments
-- [ ] Edit menu
-- [ ] Edit chore list
-- [ ] Send email to all users
-- [ ] Unit tests: admin CRUD operations, email send, non-admin access denied
-- [ ] Push to git
+- [x] Add/edit beach week (creates year entry in sidebar)
+- [x] Edit room assignments
+- [x] Edit menu
+- [x] Edit chore list
+- [x] Send email to all users
+- [x] Unit tests: admin CRUD operations, email send, non-admin access denied
+- [x] Push to git
 
 ### Phase 6: Email & Notifications
 - [ ] Birthday email notifications (scheduled daily check)

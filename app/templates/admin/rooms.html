@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block title %}Edit Rooms {{ beach_week.year }} - Beach App{% endblock %}
+
+{% block content %}
+<h2>Room Assignments - {{ beach_week.year }}</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="POST" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label for="room_name" class="form-label">Room Name</label>
+                <input type="text" class="form-control" id="room_name" name="room_name" required>
+            </div>
+            <div class="col-md-4">
+                <label for="user_id" class="form-label">Guest</label>
+                <select class="form-select" id="user_id" name="user_id" required>
+                    <option value="">Select...</option>
+                    {% for u in users %}
+                    <option value="{{ u.id }}">{{ u.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if beach_week.room_assignments %}
+<div class="table-responsive">
+    <table class="table">
+        <thead><tr><th>Room</th><th>Guest</th><th></th></tr></thead>
+        <tbody>
+        {% for ra in beach_week.room_assignments %}
+        <tr>
+            <td>{{ ra.room_name }}</td>
+            <td>{{ ra.user.name }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('admin.delete_room', ra_id=ra.id) }}" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted">No room assignments yet.</p>
+{% endif %}
+{% endblock %}
