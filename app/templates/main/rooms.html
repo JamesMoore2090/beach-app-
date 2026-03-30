@@ -3,16 +3,17 @@
 {% block content %}
 <h2>Room Assignments - {{ beach_week.year }}</h2>
 {% if beach_week.room_assignments %}
-<div class="table-responsive">
-    <table class="table">
-        <thead><tr><th>Room</th><th>Guest</th></tr></thead>
-        <tbody>
-        {% for ra in beach_week.room_assignments %}
-        <tr><td>{{ ra.room_name }}</td><td>{{ ra.user.name }}</td></tr>
+{% set rooms = beach_week.room_assignments | groupby('room_name') %}
+{% for room_name, assignments in rooms %}
+<div class="card mb-3">
+    <div class="card-header"><strong>{{ room_name }}</strong></div>
+    <ul class="list-group list-group-flush">
+        {% for ra in assignments %}
+        <li class="list-group-item">{{ ra.user.name }}</li>
         {% endfor %}
-        </tbody>
-    </table>
+    </ul>
 </div>
+{% endfor %}
 {% else %}
 <p class="text-muted">No room assignments yet.</p>
 {% endif %}

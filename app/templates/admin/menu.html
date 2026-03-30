@@ -6,25 +6,36 @@
 
 <div class="card mb-4">
     <div class="card-body">
-        <form method="POST" class="row g-2 align-items-end">
-            <div class="col-md-3">
-                <label for="day" class="form-label">Day</label>
-                <input type="date" class="form-control" id="day" name="day" required>
-            </div>
-            <div class="col-md-2">
-                <label for="meal_type" class="form-label">Meal</label>
-                <select class="form-select" id="meal_type" name="meal_type" required>
-                    <option value="breakfast">Breakfast</option>
-                    <option value="lunch">Lunch</option>
-                    <option value="dinner">Dinner</option>
-                </select>
-            </div>
-            <div class="col-md-5">
-                <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description" name="description" required>
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary">Add</button>
+        <form method="POST">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-2">
+                    <label for="day" class="form-label">Day</label>
+                    <input type="date" class="form-control" id="day" name="day" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="meal_type" class="form-label">Meal</label>
+                    <select class="form-select" id="meal_type" name="meal_type" required>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="assigned_users" class="form-label">Assigned To</label>
+                    <select class="form-select" id="assigned_users" name="assigned_users" multiple>
+                        {% for u in users %}
+                        <option value="{{ u.id }}">{{ u.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="text-muted">Hold Ctrl/Cmd to select multiple</small>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
             </div>
         </form>
     </div>
@@ -40,6 +51,9 @@
             <div>
                 <span class="badge bg-secondary">{{ item.meal_type | capitalize }}</span>
                 {{ item.description }}
+                {% if item.assigned_users %}
+                <small class="text-muted">- {{ item.assigned_users | map(attribute='name') | join(', ') }}</small>
+                {% endif %}
             </div>
             <form method="POST" action="{{ url_for('admin.delete_menu_item', item_id=item.id) }}" class="d-inline">
                 <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>

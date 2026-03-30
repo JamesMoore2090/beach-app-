@@ -89,6 +89,25 @@ def test_delete_room_assignment(client, admin_user, regular_user, db):
     assert db.session.get(RoomAssignment, ra.id) is None
 
 
+def test_multiple_people_per_room(client, admin_user, regular_user, db):
+    bw = BeachWeek(year=2026, start_date=date(2026, 7, 11), end_date=date(2026, 7, 18))
+    db.session.add(bw)
+    db.session.commit()
+    login(client, 'admin@test.com', 'adminpass')
+    # Add admin to same room
+    client.post('/admin/beach-week/2026/rooms', data={
+        'room_name': 'Master Suite',
+        'user_id': str(admin_user.id),
+    })
+    # Add regular user to same room
+    client.post('/admin/beach-week/2026/rooms', data={
+        'room_name': 'Master Suite',
+        'user_id': str(regular_user.id),
+    })
+    assignments = RoomAssignment.query.filter_by(room_name='Master Suite').all()
+    assert len(assignments) == 2
+
+
 # --- Menu ---
 
 def test_add_menu_item(client, admin_user, db):
@@ -103,6 +122,22 @@ def test_add_menu_item(client, admin_user, db):
     }, follow_redirects=True)
     assert b'Menu item added' in response.data
     assert MenuItem.query.filter_by(description='Lobster').first() is not None
+
+
+def test_add_menu_item_with_assigned_users(client, admin_user, regular_user, db):
+    bw = BeachWeek(year=2026, start_date=date(2026, 7, 11), end_date=date(2026, 7, 18))
+    db.session.add(bw)
+    db.session.commit()
+    login(client, 'admin@test.com', 'adminpass')
+    response = client.post('/admin/beach-week/2026/menu', data={
+        'day': '2026-07-12',
+        'meal_type': 'dinner',
+        'description': 'Shrimp Boil',
+        'assigned_users': [str(admin_user.id), str(regular_user.id)],
+    }, follow_redirects=True)
+    assert b'Menu item added' in response.data
+    item = MenuItem.query.filter_by(description='Shrimp Boil').first()
+    assert len(item.assigned_users) == 2
 
 
 def test_delete_menu_item(client, admin_user, db):

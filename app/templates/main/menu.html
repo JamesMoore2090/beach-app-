@@ -12,6 +12,9 @@
             <div>
                 <span class="badge bg-secondary">{{ item.meal_type | capitalize }}</span>
                 {{ item.description }}
+                {% if item.assigned_users %}
+                <small class="text-muted">- {{ item.assigned_users | map(attribute='name') | join(', ') }}</small>
+                {% endif %}
             </div>
             {% if item.meal_type == 'dinner' %}
             <form method="POST" action="{{ url_for('main.toggle_rsvp', item_id=item.id) }}">

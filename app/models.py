@@ -55,6 +55,13 @@ class MenuItem(db.Model):
     meal_type = db.Column(db.String(10), nullable=False)  # breakfast | lunch | dinner
     description = db.Column(db.Text, nullable=False)
     rsvps = db.relationship('DinnerRSVP', backref='menu_item', lazy=True)
+    assigned_users = db.relationship('User', secondary='menu_assignment', backref='menu_assignments')
+
+
+menu_assignment = db.Table('menu_assignment',
+    db.Column('menu_item_id', db.Integer, db.ForeignKey('menu_item.id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+)
 
 
 class DinnerRSVP(db.Model):
