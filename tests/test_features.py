@@ -112,7 +112,8 @@ def test_rsvp_only_dinner(client, regular_user, db):
 
 def test_chores_page(client, regular_user, db):
     bw = make_beach_week(db)
-    chore = Chore(beach_week_id=bw.id, description='Sweep porch', assigned_user_id=regular_user.id, day=bw.start_date)
+    chore = Chore(beach_week_id=bw.id, description='Sweep porch', day=bw.start_date)
+    chore.assigned_users.append(regular_user)
     db.session.add(chore)
     db.session.commit()
     login(client, 'user@test.com', 'userpass')

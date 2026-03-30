@@ -76,9 +76,14 @@ class Chore(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     beach_week_id = db.Column(db.Integer, db.ForeignKey('beach_week.id'), nullable=False)
     description = db.Column(db.String(200), nullable=False)
-    assigned_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     day = db.Column(db.Date, nullable=True)
-    assigned_user = db.relationship('User', backref='chores')
+    assigned_users = db.relationship('User', secondary='chore_assignment', backref='chores')
+
+
+chore_assignment = db.Table('chore_assignment',
+    db.Column('chore_id', db.Integer, db.ForeignKey('chore.id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+)
 
 
 class Picture(db.Model):

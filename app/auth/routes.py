@@ -17,7 +17,7 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter(User.email.ilike(email)).first()
         if user and user.check_password(password):
             login_user(user, remember=False)
             return redirect(url_for('main.dashboard'))

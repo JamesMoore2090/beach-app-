@@ -51,7 +51,8 @@ def test_chore(db, regular_user):
     bw = BeachWeek(year=2026, start_date=date(2026, 7, 11), end_date=date(2026, 7, 18))
     db.session.add(bw)
     db.session.commit()
-    chore = Chore(beach_week_id=bw.id, description='Wash dishes', assigned_user_id=regular_user.id, day=date(2026, 7, 12))
+    chore = Chore(beach_week_id=bw.id, description='Wash dishes', day=date(2026, 7, 12))
+    chore.assigned_users.append(regular_user)
     db.session.add(chore)
     db.session.commit()
-    assert chore.assigned_user.name == 'User'
+    assert regular_user in chore.assigned_users

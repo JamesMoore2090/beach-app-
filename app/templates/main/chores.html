@@ -10,7 +10,7 @@
         {% for chore in beach_week.chores %}
         <tr>
             <td>{{ chore.description }}</td>
-            <td>{{ chore.assigned_user.name if chore.assigned_user else 'Unassigned' }}</td>
+            <td>{{ chore.assigned_users | map(attribute='name') | join(', ') or 'Unassigned' }}</td>
             <td>{{ chore.day.strftime('%A') if chore.day else '' }}</td>
         </tr>
         {% endfor %}

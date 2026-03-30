@@ -70,7 +70,7 @@ def test_add_room_assignment(client, admin_user, regular_user, db):
     login(client, 'admin@test.com', 'adminpass')
     response = client.post(f'/admin/beach-week/2026/rooms', data={
         'room_name': 'Ocean Suite',
-        'user_id': str(regular_user.id),
+        'user_ids': [str(regular_user.id)],
     }, follow_redirects=True)
     assert b'Room assignment added' in response.data
     assert RoomAssignment.query.filter_by(room_name='Ocean Suite').first() is not None
@@ -97,12 +97,12 @@ def test_multiple_people_per_room(client, admin_user, regular_user, db):
     # Add admin to same room
     client.post('/admin/beach-week/2026/rooms', data={
         'room_name': 'Master Suite',
-        'user_id': str(admin_user.id),
+        'user_ids': [str(admin_user.id)],
     })
     # Add regular user to same room
     client.post('/admin/beach-week/2026/rooms', data={
         'room_name': 'Master Suite',
-        'user_id': str(regular_user.id),
+        'user_ids': [str(regular_user.id)],
     })
     assignments = RoomAssignment.query.filter_by(room_name='Master Suite').all()
     assert len(assignments) == 2
@@ -161,7 +161,7 @@ def test_add_chore(client, admin_user, regular_user, db):
     login(client, 'admin@test.com', 'adminpass')
     response = client.post('/admin/beach-week/2026/chores', data={
         'description': 'Mop floors',
-        'assigned_user_id': str(regular_user.id),
+        'assigned_users': [str(regular_user.id)],
         'day': '2026-07-13',
     }, follow_redirects=True)
     assert b'Chore added' in response.data

@@ -70,10 +70,11 @@ def edit_rooms(year):
     users = User.query.order_by(User.name).all()
     if request.method == 'POST':
         room_name = request.form.get('room_name')
-        user_id = request.form.get('user_id')
-        if room_name and user_id:
-            ra = RoomAssignment(beach_week_id=bw.id, room_name=room_name, user_id=int(user_id))
-            db.session.add(ra)
+        user_ids = request.form.getlist('user_ids')
+        if room_name and user_ids:
+            for uid in user_ids:
+                ra = RoomAssignment(beach_week_id=bw.id, room_name=room_name, user_id=int(uid))
+                db.session.add(ra)
             db.session.commit()
             flash('Room assignment added.', 'success')
         return redirect(url_for('admin.edit_rooms', year=year))
@@ -144,14 +145,17 @@ def edit_chores(year):
     if request.method == 'POST':
         from datetime import date
         description = request.form['description']
-        user_id = request.form.get('assigned_user_id') or None
+        user_ids = request.form.getlist('assigned_users')
         day = request.form.get('day') or None
         chore = Chore(
             beach_week_id=bw.id,
             description=description,
-            assigned_user_id=int(user_id) if user_id else None,
             day=date.fromisoformat(day) if day else None,
         )
+        for uid in user_ids:
+            user = db.session.get(User, int(uid))
+            if user:
+                chore.assigned_users.append(user)
         db.session.add(chore)
         db.session.commit()
         flash('Chore added.', 'success')
