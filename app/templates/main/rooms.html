@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}Rooms {{ beach_week.year }} - Beach App{% endblock %}
+{% block content %}
+<h2>Room Assignments - {{ beach_week.year }}</h2>
+{% if beach_week.room_assignments %}
+<div class="table-responsive">
+    <table class="table">
+        <thead><tr><th>Room</th><th>Guest</th></tr></thead>
+        <tbody>
+        {% for ra in beach_week.room_assignments %}
+        <tr><td>{{ ra.room_name }}</td><td>{{ ra.user.name }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted">No room assignments yet.</p>
+{% endif %}
+{% endblock %}

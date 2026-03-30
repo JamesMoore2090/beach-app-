@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}Pictures {{ beach_week.year }} - Beach App{% endblock %}
+{% block content %}
+<h2>Pictures - {{ beach_week.year }}</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('main.upload_picture', year=beach_week.year) }}" enctype="multipart/form-data">
+            <div class="row g-2 align-items-end">
+                <div class="col-auto">
+                    <input type="file" class="form-control" name="photo" accept="image/*" required>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" name="caption" placeholder="Caption (optional)">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if beach_week.pictures %}
+<div class="row">
+    {% for pic in beach_week.pictures %}
+    <div class="col-6 col-md-4 col-lg-3 mb-3">
+        <div class="card">
+            <img src="{{ url_for('static', filename='uploads/' + pic.file_path) }}" class="card-img-top" alt="{{ pic.caption or 'Beach photo' }}">
+            {% if pic.caption %}
+            <div class="card-body p-2"><small>{{ pic.caption }}</small></div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-muted">No pictures yet. Upload the first one!</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Blog - Beach App{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Blog</h2>
+    <a href="{{ url_for('main.blog_new') }}" class="btn btn-primary">New Post</a>
+</div>
+{% if posts %}
+{% for post in posts %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5><a href="{{ url_for('main.blog_detail', post_id=post.id) }}">{{ post.title }}</a></h5>
+        <small class="text-muted">By {{ post.author.name }} on {{ post.created_at.strftime('%b %d, %Y') }}</small>
+        <p class="mt-2">{{ post.content[:300] }}{% if post.content|length > 300 %}...{% endif %}</p>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<p class="text-muted">No posts yet.</p>
+{% endif %}
+{% endblock %}

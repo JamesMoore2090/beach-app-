@@ -61,19 +61,20 @@ A responsive web app for organizing an annual family beach vacation at Carolina 
 - [x] Unit tests: login/logout, session expiry, password reset, role-based access
 
 ### Phase 3: Layout & Navigation
-- [ ] Base template with responsive Bootstrap layout
-- [ ] Left sidebar with year list and sub-pages
-- [ ] Dashboard/main page with countdown timer
+- [x] Base template with responsive Bootstrap layout
+- [x] Left sidebar with year list and sub-pages
+- [x] Dashboard/main page with countdown timer
 
 ### Phase 4: Core User Features
-- [ ] Room assignments view (read-only)
-- [ ] Menu view with breakfast/lunch/dinner per day
-- [ ] Dinner "Not here" toggle (RSVP)
-- [ ] Chore list view (read-only)
-- [ ] Pictures gallery
-- [ ] Blog posts with picture support
-- [ ] Dashboard switches to dinner menu when countdown reaches zero
-- [ ] Unit tests: room assignments, menu/RSVP, chores, pictures, blog posts, countdown logic
+- [x] Room assignments view (read-only)
+- [x] Menu view with breakfast/lunch/dinner per day
+- [x] Dinner "Not here" toggle (RSVP)
+- [x] Chore list view (read-only)
+- [x] Pictures gallery
+- [x] Blog posts with picture support
+- [x] Dashboard switches to dinner menu when countdown reaches zero
+- [x] Unit tests: room assignments, menu/RSVP, chores, pictures, blog posts, countdown logic
+- [x] Push to git
 
 ### Phase 5: Admin Features
 - [ ] Add/edit beach week (creates year entry in sidebar)
@@ -82,12 +83,14 @@ A responsive web app for organizing an annual family beach vacation at Carolina 
 - [ ] Edit chore list
 - [ ] Send email to all users
 - [ ] Unit tests: admin CRUD operations, email send, non-admin access denied
+- [ ] Push to git
 
 ### Phase 6: Email & Notifications
 - [ ] Birthday email notifications (scheduled daily check)
 - [ ] Password reset emails
 - [ ] Admin broadcast emails
 - [ ] Unit tests: birthday check logic, email sending (mocked SMTP)
+- [ ] Push to git
 
 ### Phase 7: Polish & Deployment Prep
 - [ ] Responsive testing (phone, tablet, desktop)
@@ -95,6 +98,7 @@ A responsive web app for organizing an annual family beach vacation at Carolina 
 - [ ] Production config (secret key, email server, database URL)
 - [ ] Deployment documentation
 - [ ] Full test suite passing with coverage report
+- [ ] Push to git
 
 ### Nice to Have (Future)
 - [ ] MFA (multi-factor authentication)

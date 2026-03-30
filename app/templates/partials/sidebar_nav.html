@@ -1,0 +1,45 @@
+<nav class="nav flex-column px-2">
+    <a class="nav-link" href="{{ url_for('main.dashboard') }}">
+        <i class="bi bi-house-door"></i> Dashboard
+    </a>
+
+    <a class="nav-link" href="{{ url_for('main.blog_list') }}">
+        <i class="bi bi-journal-text"></i> Blog
+    </a>
+
+    {% if beach_weeks %}
+    <hr class="border-secondary">
+    <small class="text-secondary px-3 text-uppercase">Beach Weeks</small>
+    {% for bw in beach_weeks %}
+    <div>
+        <button class="year-header" data-bs-toggle="collapse" data-bs-target="#year-{{ bw.year }}">
+            <i class="bi bi-calendar-event"></i> {{ bw.year }}
+        </button>
+        <div class="collapse year-submenu" id="year-{{ bw.year }}">
+            <a class="nav-link py-1" href="{{ url_for('main.room_assignments', year=bw.year) }}">
+                <i class="bi bi-door-open"></i> Rooms
+            </a>
+            <a class="nav-link py-1" href="{{ url_for('main.menu', year=bw.year) }}">
+                <i class="bi bi-egg-fried"></i> Menu
+            </a>
+            <a class="nav-link py-1" href="{{ url_for('main.chores', year=bw.year) }}">
+                <i class="bi bi-list-check"></i> Chores
+            </a>
+            <a class="nav-link py-1" href="{{ url_for('main.pictures', year=bw.year) }}">
+                <i class="bi bi-camera"></i> Pictures
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <hr class="border-secondary">
+    {% if current_user.is_admin %}
+    <a class="nav-link" href="{{ url_for('admin.admin_home') }}">
+        <i class="bi bi-gear"></i> Admin
+    </a>
+    {% endif %}
+    <a class="nav-link" href="{{ url_for('auth.logout') }}">
+        <i class="bi bi-box-arrow-right"></i> Logout
+    </a>
+</nav>

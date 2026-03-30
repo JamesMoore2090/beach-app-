@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}Chores {{ beach_week.year }} - Beach App{% endblock %}
+{% block content %}
+<h2>Chore List - {{ beach_week.year }}</h2>
+{% if beach_week.chores %}
+<div class="table-responsive">
+    <table class="table">
+        <thead><tr><th>Chore</th><th>Assigned To</th><th>Day</th></tr></thead>
+        <tbody>
+        {% for chore in beach_week.chores %}
+        <tr>
+            <td>{{ chore.description }}</td>
+            <td>{{ chore.assigned_user.name if chore.assigned_user else 'Unassigned' }}</td>
+            <td>{{ chore.day.strftime('%A') if chore.day else '' }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted">No chores assigned yet.</p>
+{% endif %}
+{% endblock %}

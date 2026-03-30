@@ -1,15 +1,91 @@
-<!DOCTYPE html>
-<html>
-<head><title>Dashboard - Beach App</title></head>
-<body>
-    <h1>Dashboard</h1>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-    <p>Welcome to Beach App!</p>
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}Dashboard - Beach App{% endblock %}
+
+{% block content %}
+<h2>Carolina Beach</h2>
+
+{% if current_week %}
+    <div class="alert alert-success">
+        <h4>Beach Week {{ current_week.year }} is happening now!</h4>
+        <a href="{{ url_for('main.menu', year=current_week.year) }}" class="btn btn-primary mt-2">View This Week's Menu</a>
+    </div>
+{% elif next_week %}
+    {% set days_left = (next_week.start_date - today).days %}
+    <div class="card my-4">
+        <div class="card-body text-center">
+            <h4 class="card-title">Countdown to Beach Week {{ next_week.year }}</h4>
+            <p class="text-muted">{{ next_week.start_date.strftime('%B %d') }} - {{ next_week.end_date.strftime('%B %d, %Y') }}</p>
+            <div class="d-flex justify-content-center gap-4 my-3" id="countdown"
+                 data-target="{{ next_week.start_date.isoformat() }}">
+                <div class="text-center">
+                    <div class="countdown-number" id="cd-days">{{ days_left }}</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="text-center">
+                    <div class="countdown-number" id="cd-hours">0</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="text-center">
+                    <div class="countdown-number" id="cd-mins">0</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="text-center">
+                    <div class="countdown-number" id="cd-secs">0</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+<div class="card my-4">
+    <div class="card-body text-center">
+        <p class="text-muted">No upcoming beach week scheduled yet.</p>
+    </div>
+</div>
+{% endif %}
+
+<!-- Blog Posts -->
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+    <h4>Recent Posts</h4>
+    <a href="{{ url_for('main.blog_new') }}" class="btn btn-sm btn-primary">New Post</a>
+</div>
+{% if blog_posts %}
+{% for post in blog_posts %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5><a href="{{ url_for('main.blog_detail', post_id=post.id) }}">{{ post.title }}</a></h5>
+        <small class="text-muted">By {{ post.author.name }} on {{ post.created_at.strftime('%b %d, %Y') }}</small>
+        <p class="mt-2">{{ post.content[:200] }}{% if post.content|length > 200 %}...{% endif %}</p>
+        {% if post.pictures %}
+        <div class="d-flex gap-2">
+            {% for pic in post.pictures[:3] %}
+            <img src="{{ url_for('static', filename='uploads/' + pic.file_path) }}" class="rounded" style="height: 60px;" alt="">
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<p class="text-muted">No posts yet. Be the first to share!</p>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const el = document.getElementById('countdown');
+if (el) {
+    const target = new Date(el.dataset.target + 'T00:00:00').getTime();
+    setInterval(function() {
+        const now = new Date().getTime();
+        const diff = target - now;
+        if (diff <= 0) { location.reload(); return; }
+        document.getElementById('cd-days').textContent = Math.floor(diff / 86400000);
+        document.getElementById('cd-hours').textContent = Math.floor((diff % 86400000) / 3600000);
+        document.getElementById('cd-mins').textContent = Math.floor((diff % 3600000) / 60000);
+        document.getElementById('cd-secs').textContent = Math.floor((diff % 60000) / 1000);
+    }, 1000);
+}
+</script>
+{% endblock %}

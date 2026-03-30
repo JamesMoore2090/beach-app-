@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block title %}Menu {{ beach_week.year }} - Beach App{% endblock %}
+{% block content %}
+<h2>Menu - {{ beach_week.year }}</h2>
+{% if days %}
+{% for day in days %}
+<div class="card mb-3">
+    <div class="card-header"><strong>{{ day.strftime('%A, %B %d') }}</strong></div>
+    <div class="card-body">
+        {% for item in beach_week.menu_items if item.day == day %}
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+                <span class="badge bg-secondary">{{ item.meal_type | capitalize }}</span>
+                {{ item.description }}
+            </div>
+            {% if item.meal_type == 'dinner' %}
+            <form method="POST" action="{{ url_for('main.toggle_rsvp', item_id=item.id) }}">
+                {% set rsvp = user_rsvps.get(item.id) %}
+                {% if rsvp and rsvp.status == 'not_here' %}
+                <button type="submit" class="btn btn-sm btn-outline-danger">Not Here</button>
+                {% else %}
+                <button type="submit" class="btn btn-sm btn-outline-success">Attending</button>
+                {% endif %}
+            </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<p class="text-muted">No menu items yet.</p>
+{% endif %}
+{% endblock %}
