@@ -3,67 +3,45 @@
 
 {% block content %}
 <h2>Menu - {{ beach_week.year }}</h2>
+<p class="text-muted">{{ beach_week.start_date.strftime('%B %d') }} - {{ beach_week.end_date.strftime('%B %d, %Y') }}</p>
 
+{% for day_info in schedule %}
 <div class="card mb-4">
+    <div class="card-header"><strong>{{ day_info.date.strftime('%A, %B %d') }}</strong></div>
     <div class="card-body">
-        <form method="POST">
+        {% for meal in day_info.meals %}
+        {% set item = day_info.items[meal] %}
+        <form method="POST" class="mb-3 pb-3 {{ 'border-bottom' if not loop.last }}">
+            <input type="hidden" name="day" value="{{ day_info.date.isoformat() }}">
+            <input type="hidden" name="meal_type" value="{{ meal }}">
             <div class="row g-2 align-items-end">
                 <div class="col-md-2">
-                    <label for="day" class="form-label">Day</label>
-                    <input type="date" class="form-control" id="day" name="day" required>
+                    <label class="form-label fw-bold">{{ meal | capitalize }}</label>
                 </div>
-                <div class="col-md-2">
-                    <label for="meal_type" class="form-label">Meal</label>
-                    <select class="form-select" id="meal_type" name="meal_type" required>
-                        <option value="breakfast">Breakfast</option>
-                        <option value="lunch">Lunch</option>
-                        <option value="dinner">Dinner</option>
-                    </select>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="description"
+                           placeholder="What's cooking?"
+                           value="{{ item.description if item else '' }}">
                 </div>
-                <div class="col-md-3">
-                    <label for="description" class="form-label">Description</label>
-                    <input type="text" class="form-control" id="description" name="description" required>
-                </div>
-                <div class="col-md-3">
-                    <label for="assigned_users" class="form-label">Assigned To</label>
-                    <select class="form-select" id="assigned_users" name="assigned_users" multiple>
+                <div class="col-md-4">
+                    <select class="form-select" name="assigned_users" multiple>
                         {% for u in users %}
-                        <option value="{{ u.id }}">{{ u.name }}</option>
+                        <option value="{{ u.id }}"
+                            {{ 'selected' if item and u in item.assigned_users }}>{{ u.name }}</option>
                         {% endfor %}
                     </select>
-                    <small class="text-muted">Hold Ctrl/Cmd to select multiple</small>
+                    <small class="text-muted">Ctrl/Cmd + click to select</small>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                    {% if item and item.description %}
+                    <span class="text-success"><i class="bi bi-check-circle-fill"></i></span>
+                    {% endif %}
                 </div>
             </div>
         </form>
-    </div>
-</div>
-
-{% if days %}
-{% for day in days %}
-<div class="card mb-3">
-    <div class="card-header"><strong>{{ day.strftime('%A, %B %d') }}</strong></div>
-    <div class="card-body">
-        {% for item in beach_week.menu_items if item.day == day %}
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <div>
-                <span class="badge bg-secondary">{{ item.meal_type | capitalize }}</span>
-                {{ item.description }}
-                {% if item.assigned_users %}
-                <small class="text-muted">- {{ item.assigned_users | map(attribute='name') | join(', ') }}</small>
-                {% endif %}
-            </div>
-            <form method="POST" action="{{ url_for('admin.delete_menu_item', item_id=item.id) }}" class="d-inline">
-                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
-            </form>
-        </div>
         {% endfor %}
     </div>
 </div>
 {% endfor %}
-{% else %}
-<p class="text-muted">No menu items yet.</p>
-{% endif %}
 {% endblock %}

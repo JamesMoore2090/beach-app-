@@ -120,7 +120,7 @@ def test_add_menu_item(client, admin_user, db):
         'meal_type': 'dinner',
         'description': 'Lobster',
     }, follow_redirects=True)
-    assert b'Menu item added' in response.data
+    assert b'Menu updated' in response.data
     assert MenuItem.query.filter_by(description='Lobster').first() is not None
 
 
@@ -135,7 +135,7 @@ def test_add_menu_item_with_assigned_users(client, admin_user, regular_user, db)
         'description': 'Shrimp Boil',
         'assigned_users': [str(admin_user.id), str(regular_user.id)],
     }, follow_redirects=True)
-    assert b'Menu item added' in response.data
+    assert b'Menu updated' in response.data
     item = MenuItem.query.filter_by(description='Shrimp Boil').first()
     assert len(item.assigned_users) == 2
 

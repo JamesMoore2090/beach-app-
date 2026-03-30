@@ -100,25 +100,55 @@ def delete_room(ra_id):
 @admin_bp.route('/beach-week/<int:year>/menu', methods=['GET', 'POST'])
 @admin_required
 def edit_menu(year):
+    from datetime import timedelta
     bw = BeachWeek.query.filter_by(year=year).first_or_404()
     users = User.query.order_by(User.name).all()
+
     if request.method == 'POST':
         from datetime import date
         day = date.fromisoformat(request.form['day'])
         meal_type = request.form['meal_type']
-        description = request.form['description']
+        description = request.form.get('description', '')
         user_ids = request.form.getlist('assigned_users')
-        item = MenuItem(beach_week_id=bw.id, day=day, meal_type=meal_type, description=description)
+        # Update existing or create new
+        item = MenuItem.query.filter_by(
+            beach_week_id=bw.id, day=day, meal_type=meal_type
+        ).first()
+        if item:
+            item.description = description
+            item.assigned_users.clear()
+        else:
+            item = MenuItem(beach_week_id=bw.id, day=day, meal_type=meal_type, description=description)
+            db.session.add(item)
         for uid in user_ids:
-            user = db.session.get(User, int(uid))
-            if user:
-                item.assigned_users.append(user)
-        db.session.add(item)
+            u = db.session.get(User, int(uid))
+            if u:
+                item.assigned_users.append(u)
         db.session.commit()
-        flash('Menu item added.', 'success')
+        flash('Menu updated.', 'success')
         return redirect(url_for('admin.edit_menu', year=year))
-    days = sorted(set(item.day for item in bw.menu_items))
-    return render_template('admin/menu.html', beach_week=bw, days=days, users=users)
+
+    # Build the week schedule
+    schedule = []
+    num_days = (bw.end_date - bw.start_date).days
+    for i in range(num_days + 1):
+        day = bw.start_date + timedelta(days=i)
+        if i == 0:
+            meals = ['dinner']
+        elif i == num_days:
+            meals = []
+        else:
+            meals = ['breakfast', 'lunch', 'dinner']
+        day_items = {}
+        for meal in meals:
+            item = MenuItem.query.filter_by(
+                beach_week_id=bw.id, day=day, meal_type=meal
+            ).first()
+            day_items[meal] = item
+        if meals:
+            schedule.append({'date': day, 'meals': meals, 'items': day_items})
+
+    return render_template('admin/menu.html', beach_week=bw, schedule=schedule, users=users)
 
 
 @admin_bp.route('/menu-item/<int:item_id>/delete', methods=['POST'])
