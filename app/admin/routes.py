@@ -173,6 +173,50 @@ def delete_chore(chore_id):
     return redirect(url_for('admin.admin_home'))
 
 
+# --- Users ---
+
+@admin_bp.route('/users/<int:user_id>/edit', methods=['GET', 'POST'])
+@admin_required
+def edit_user(user_id):
+    user = db.session.get(User, user_id)
+    if not user:
+        flash('User not found.', 'danger')
+        return redirect(url_for('admin.admin_home'))
+    if request.method == 'POST':
+        user.name = request.form.get('name', user.name)
+        user.email = request.form.get('email', user.email)
+        user.role = request.form.get('role', user.role)
+        birthday = request.form.get('birthday')
+        if birthday:
+            from datetime import date
+            user.birthday = date.fromisoformat(birthday)
+        else:
+            user.birthday = None
+        password = request.form.get('password')
+        if password:
+            user.set_password(password)
+        db.session.commit()
+        flash(f'User {user.name} updated.', 'success')
+        return redirect(url_for('admin.admin_home'))
+    return render_template('admin/edit_user.html', user=user)
+
+
+@admin_bp.route('/users/<int:user_id>/delete', methods=['POST'])
+@admin_required
+def delete_user(user_id):
+    user = db.session.get(User, user_id)
+    if not user:
+        flash('User not found.', 'danger')
+        return redirect(url_for('admin.admin_home'))
+    if user.id == current_user.id:
+        flash('You cannot delete yourself.', 'danger')
+        return redirect(url_for('admin.admin_home'))
+    db.session.delete(user)
+    db.session.commit()
+    flash(f'User {user.name} deleted.', 'success')
+    return redirect(url_for('admin.admin_home'))
+
+
 # --- Email ---
 
 @admin_bp.route('/email', methods=['GET', 'POST'])

@@ -1,5 +1,5 @@
 from datetime import date
-from app.models import BeachWeek, RoomAssignment, MenuItem, Chore
+from app.models import User, BeachWeek, RoomAssignment, MenuItem, Chore
 
 
 def login(client, email, password):
@@ -192,6 +192,56 @@ def test_send_email(client, admin_user, regular_user, app):
         assert b'Email sent' in response.data
         assert len(outbox) == 1
         assert 'Beach Update' in outbox[0].subject
+
+
+# --- Users ---
+
+def test_edit_user(client, admin_user, regular_user, db):
+    login(client, 'admin@test.com', 'adminpass')
+    response = client.post(f'/admin/users/{regular_user.id}/edit', data={
+        'name': 'Updated Name',
+        'email': 'updated@test.com',
+        'role': 'user',
+        'birthday': '1992-08-20',
+    }, follow_redirects=True)
+    assert b'Updated Name' in response.data
+    assert b'updated' in response.data
+    db.session.refresh(regular_user)
+    assert regular_user.name == 'Updated Name'
+    assert regular_user.email == 'updated@test.com'
+
+
+def test_edit_user_password(client, admin_user, regular_user, db):
+    login(client, 'admin@test.com', 'adminpass')
+    client.post(f'/admin/users/{regular_user.id}/edit', data={
+        'name': regular_user.name,
+        'email': regular_user.email,
+        'role': 'user',
+        'password': 'newpass123',
+    })
+    db.session.refresh(regular_user)
+    assert regular_user.check_password('newpass123')
+
+
+def test_delete_user(client, admin_user, regular_user, db):
+    user_id = regular_user.id
+    login(client, 'admin@test.com', 'adminpass')
+    response = client.post(f'/admin/users/{user_id}/delete', follow_redirects=True)
+    assert b'deleted' in response.data
+    assert db.session.get(User, user_id) is None
+
+
+def test_cannot_delete_self(client, admin_user, db):
+    login(client, 'admin@test.com', 'adminpass')
+    response = client.post(f'/admin/users/{admin_user.id}/delete', follow_redirects=True)
+    assert b'cannot delete yourself' in response.data
+    assert db.session.get(User, admin_user.id) is not None
+
+
+def test_non_admin_cannot_edit_user(client, regular_user):
+    login(client, 'user@test.com', 'userpass')
+    response = client.get(f'/admin/users/{regular_user.id}/edit', follow_redirects=True)
+    assert b'Admin access required' in response.data
 
 
 def test_non_admin_cannot_send_email(client, regular_user):
