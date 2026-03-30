@@ -86,11 +86,11 @@ A responsive web app for organizing an annual family beach vacation at Carolina 
 - [x] Push to git
 
 ### Phase 6: Email & Notifications
-- [ ] Birthday email notifications (scheduled daily check)
-- [ ] Password reset emails
-- [ ] Admin broadcast emails
-- [ ] Unit tests: birthday check logic, email sending (mocked SMTP)
-- [ ] Push to git
+- [x] Birthday email notifications (scheduled daily check)
+- [x] Password reset emails
+- [x] Admin broadcast emails
+- [x] Unit tests: birthday check logic, email sending (mocked SMTP)
+- [x] Push to git
 
 ### Phase 7: Polish & Deployment Prep
 - [ ] Responsive testing (phone, tablet, desktop)

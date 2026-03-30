@@ -30,4 +30,14 @@ def create_app(config_name='dev'):
     with app.app_context():
         db.create_all()
 
+    @app.cli.command('check-birthdays')
+    def check_birthdays_cmd():
+        """Send birthday emails for today's birthdays."""
+        from app.email_tasks import check_birthdays
+        sent = check_birthdays(app)
+        if sent:
+            print(f"Birthday emails sent for: {', '.join(sent)}")
+        else:
+            print("No birthdays today.")
+
     return app
