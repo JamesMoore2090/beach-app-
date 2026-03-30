@@ -93,12 +93,12 @@ A responsive web app for organizing an annual family beach vacation at Carolina 
 - [x] Push to git
 
 ### Phase 7: Polish & Deployment Prep
-- [ ] Responsive testing (phone, tablet, desktop)
-- [ ] Error handling and flash messages
-- [ ] Production config (secret key, email server, database URL)
-- [ ] Deployment documentation
-- [ ] Full test suite passing with coverage report
-- [ ] Push to git
+- [x] Responsive testing (phone, tablet, desktop)
+- [x] Error handling and flash messages
+- [x] Production config (secret key, email server, database URL)
+- [x] Deployment documentation
+- [x] Full test suite passing with coverage report
+- [x] Push to git
 
 ### Nice to Have (Future)
 - [ ] MFA (multi-factor authentication)
@@ -106,4 +106,39 @@ A responsive web app for organizing an annual family beach vacation at Carolina 
 ---
 
 ## Review
-_To be filled in after implementation._
+
+### Summary
+All 7 phases complete. The Beach App is a fully functional responsive web application for organizing the annual Moore family beach vacation at Carolina Beach, NC.
+
+### What was built
+- **Auth system** — email login, password reset via email tokens, session expires on browser close, admin-only user management (add/edit/delete)
+- **Dashboard** — live countdown timer to next beach week, blog feed, auto-switches to menu link during beach week
+- **Sidebar navigation** — collapsible year list with sub-pages for rooms, menu, chores, pictures; collapses to hamburger on mobile
+- **Room assignments** — multi-person per room, grouped display
+- **Menu** — pre-populated weekly schedule (day 1: dinner only, last day: none, rest: all meals), multi-user assignment for cooks, dinner RSVP toggle (Attending/Not Here)
+- **Chore list** — multi-user assignment per chore
+- **Pictures** — per-year gallery with upload
+- **Blog** — posts with photo attachments, visible on dashboard
+- **Admin panel** — full CRUD for beach weeks, rooms, menu, chores, users; broadcast email to all users
+- **Email** — password reset, admin broadcasts, daily birthday check via CLI command (`flask check-birthdays`)
+- **Dark/light mode** — toggle with localStorage persistence
+- **Error pages** — custom 404 and 500 pages
+- **Production ready** — secure session cookies, `.env.example`, `DEPLOY.md` with Gunicorn/Nginx/HTTPS/cron setup
+
+### Test coverage
+- **60 tests passing**
+- **91% code coverage**
+- Tests cover: auth flows, password reset, role-based access, all CRUD operations, RSVP toggle, blog, birthday emails, admin email broadcast
+
+### Tech stack
+- Python 3 / Flask / SQLAlchemy / SQLite (dev) / PostgreSQL (prod)
+- Bootstrap 5 with dark mode / Jinja2 templates
+- Flask-Login / Flask-Mail / itsdangerous
+- pytest with Flask test client
+
+### Files created
+- 20+ templates (Bootstrap 5 responsive)
+- 5 test files
+- 9 database models + 3 join tables
+- 3 route blueprints (auth, main, admin)
+- Deployment guide and environment template

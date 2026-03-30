@@ -32,7 +32,9 @@ class TestConfig(BaseConfig):
 
 class ProdConfig(BaseConfig):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///' + os.path.join(basedir, '..', 'beach_app.db'))
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
 
 
 config = {

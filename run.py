@@ -1,6 +1,8 @@
+import os
 from app import create_app
 
-app = create_app('dev')
+config_name = os.environ.get('FLASK_CONFIG', 'dev')
+app = create_app(config_name)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=(config_name == 'dev'))
