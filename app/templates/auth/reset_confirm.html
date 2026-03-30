@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Set New Password - Beach App</title></head>
+<body>
+    <h1>Set New Password</h1>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <input type="password" name="password" placeholder="New Password (min 8 chars)" required>
+        <button type="submit">Update Password</button>
+    </form>
+</body>
+</html>

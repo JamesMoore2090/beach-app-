@@ -54,11 +54,11 @@ A responsive web app for organizing an annual family beach vacation at Carolina 
 - [x] Set up pytest with test fixtures (test client, test database, test users)
 
 ### Phase 2: Authentication
-- [ ] Login page (landing page)
-- [ ] Flask-Login session management (session expires on browser close)
-- [ ] Password reset via email
-- [ ] User registration (admin-only: admin creates users)
-- [ ] Unit tests: login/logout, session expiry, password reset, role-based access
+- [x] Login page (landing page)
+- [x] Flask-Login session management (session expires on browser close)
+- [x] Password reset via email
+- [x] User registration (admin-only: admin creates users)
+- [x] Unit tests: login/logout, session expiry, password reset, role-based access
 
 ### Phase 3: Layout & Navigation
 - [ ] Base template with responsive Bootstrap layout

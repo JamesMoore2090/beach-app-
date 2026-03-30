@@ -14,6 +14,8 @@ class BaseConfig:
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', 'noreply@beachapp.com')
     UPLOAD_FOLDER = os.path.join(basedir, '..', 'uploads')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max upload
+    SESSION_PERMANENT = False  # session expires when browser closes
+    PASSWORD_RESET_EXPIRY = 3600  # 1 hour
 
 
 class DevConfig(BaseConfig):
